@@ -1,13 +1,27 @@
 import React from 'react'
-import { createRoot } from 'react-dom/client'
-import { ChakraProvider } from '@chakra-ui/react'
+import ReactDOM from 'react-dom/client'
+import { ThemeProvider, createTheme } from '@mui/material'
+import CssBaseline from '@mui/material/CssBaseline'
+import App from './App'
 import './index.css'
-import App from './App.jsx'
 
-createRoot(document.getElementById('root')).render(
+const theme = createTheme({
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#6B46C1',
+    },
+    secondary: {
+      main: '#319795',
+    },
+  },
+})
+
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <ChakraProvider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <App />
-    </ChakraProvider>
+    </ThemeProvider>
   </React.StrictMode>,
 )

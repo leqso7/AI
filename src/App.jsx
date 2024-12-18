@@ -1,21 +1,16 @@
 import { useState } from 'react'
 import {
-  ChakraProvider,
+  Container,
   Box,
-  VStack,
-  Heading,
-  Text,
+  Typography,
   Button,
-  Image,
-  useToast,
-} from '@chakra-ui/react'
-import './App.css'
+  Stack,
+} from '@mui/material'
 
 function App() {
   const [selectedImage, setSelectedImage] = useState(null)
   const [description, setDescription] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const toast = useToast()
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0]
@@ -48,100 +43,91 @@ function App() {
       
       if (data.success) {
         setDescription(data.description)
-        toast({
-          title: 'სურათი გაანალიზებულია!',
-          description: 'ჩვენ ვიპოვეთ რა არის სურათზე!',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-        })
+        alert('სურათი წარმატებით გაანალიზდა!')
       }
     } catch (error) {
-      toast({
-        title: 'შეცდომა',
-        description: 'სურათის ანალიზი ვერ მოხერხდა',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      })
+      alert('შეცდომა: სურათის ანალიზი ვერ მოხერხდა')
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <ChakraProvider>
-      <Box minH="100vh" p={8} bg="gray.50">
-        <VStack spacing={8}>
-          <Heading size="xl" color="purple.600">
-            ფოტოს დამხმარე
-          </Heading>
-          
-          <Box
-            p={6}
-            bg="white"
-            borderRadius="xl"
-            boxShadow="lg"
-            w="100%"
-            maxW="600px"
-          >
-            <VStack spacing={4}>
-              <Button
-                colorScheme="purple"
-                size="lg"
-                onClick={() => document.getElementById('imageInput').click()}
-                w="100%"
-              >
-                ფოტოს ატვირთვა
-              </Button>
-              <Button
-                colorScheme="teal"
-                size="lg"
-                onClick={handleCameraCapture}
-                w="100%"
-              >
-                ფოტოს გადაღება
-              </Button>
-              <input
-                id="imageInput"
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                style={{ display: 'none' }}
-              />
-            </VStack>
-          </Box>
-
-          {selectedImage && (
-            <Box
-              p={6}
-              bg="white"
-              borderRadius="xl"
-              boxShadow="lg"
-              w="100%"
-              maxW="600px"
+    <Container maxWidth="md" sx={{ py: 4 }}>
+      <Stack spacing={4}>
+        <Typography variant="h3" color="primary" align="center">
+          ფოტოს დამხმარე
+        </Typography>
+        
+        <Box sx={{ 
+          p: 3, 
+          bgcolor: 'background.paper',
+          borderRadius: 2,
+          boxShadow: 3
+        }}>
+          <Stack spacing={2}>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={() => document.getElementById('imageInput').click()}
+              fullWidth
             >
-              <VStack spacing={4}>
-                <Image
-                  src={selectedImage}
-                  alt="ატვირთული სურათი"
-                  borderRadius="lg"
-                  maxH="400px"
-                />
-                {description && (
-                  <Text fontSize="xl" textAlign="center" color="gray.700">
-                    {description}
-                  </Text>
-                )}
-                {isLoading && (
-                  <Text color="gray.500">სურათის ანალიზი მიმდინარეობს...</Text>
-                )}
-              </VStack>
-            </Box>
-          )}
-        </VStack>
-      </Box>
-    </ChakraProvider>
+              ფოტოს ატვირთვა
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              size="large"
+              onClick={handleCameraCapture}
+              fullWidth
+            >
+              ფოტოს გადაღება
+            </Button>
+            <input
+              id="imageInput"
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              style={{ display: 'none' }}
+            />
+          </Stack>
+        </Box>
+
+        {selectedImage && (
+          <Box sx={{ 
+            p: 3, 
+            bgcolor: 'background.paper',
+            borderRadius: 2,
+            boxShadow: 3
+          }}>
+            <Stack spacing={2}>
+              <Box
+                component="img"
+                src={selectedImage}
+                alt="ატვირთული სურათი"
+                sx={{
+                  maxHeight: 400,
+                  width: '100%',
+                  objectFit: 'contain',
+                  borderRadius: 1,
+                }}
+              />
+              {description && (
+                <Typography variant="h6" align="center" color="text.primary">
+                  {description}
+                </Typography>
+              )}
+              {isLoading && (
+                <Typography color="text.secondary" align="center">
+                  სურათის ანალიზი მიმდინარეობს...
+                </Typography>
+              )}
+            </Stack>
+          </Box>
+        )}
+      </Stack>
+    </Container>
   )
 }
 
